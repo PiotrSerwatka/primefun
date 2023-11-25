@@ -19,26 +19,26 @@ public class PrimeService {
             return 3;
         }
         int counter = 0;
-        long potentialPrimeNumver = 3;
+        long potentialPrimeNumber = 3;
         while (counter != i - 1) {
             LocalDateTime start = LocalDateTime.now();
-            result = potentialPrimeNumver;
-            if (isAPrime(potentialPrimeNumver)) {
+            result = potentialPrimeNumber;
+            if (isAPrime(potentialPrimeNumber)) {
                 counter++;
                 if (counter % 10000 == 0) {
                     System.out.printf("PrimeCount=%s out of %s at: %s and took: %s%n", counter, i, LocalDateTime.now(), Duration.between(start, LocalDateTime.now()));
                 }
             }
-            potentialPrimeNumver += 2;
+            potentialPrimeNumber += 2;
         }
 
         return result;
     }
 
-    private boolean isAPrime(Long potentialPrimeNumver) {
-		if (potentialPrimeNumver == 1 || potentialPrimeNumver == 4 || potentialPrimeNumver % 2 == 0) return false;
-        for (int divider = 3; hasNextBatchToCalculate(potentialPrimeNumver / 2, divider); divider++) {
-            if (potentialPrimeNumver % divider == 0) {
+    private boolean isAPrime(Long potentialPrimeNumber) {
+		if (potentialPrimeNumber == 1 || potentialPrimeNumber == 4 || potentialPrimeNumber % 2 == 0) return false;
+        for (int divider = 3; hasNextBatchToCalculate(potentialPrimeNumber / 2, divider); divider++) {
+            if (potentialPrimeNumber % divider == 0) {
                 return false;
             }
         }
@@ -46,7 +46,7 @@ public class PrimeService {
     }
 
 
-    public List<Long> calculatPrimeInRange(long to) {
+    public List<Long> calculatePrimeInRange(long to) {
 
 		List<Long> result = new LinkedList<>();
 
@@ -77,13 +77,13 @@ public class PrimeService {
 
 	private List<Pair> calculateBatches(long to) {
         List<Pair> result = new LinkedList<>();
-        long liczbaRdzeni = Runtime.getRuntime().availableProcessors();
+        long coreNumber = Runtime.getRuntime().availableProcessors();
 
-		if (liczbaRdzeni > to) {
-			liczbaRdzeni = to;
+		if (coreNumber > to) {
+			coreNumber = to;
 		}
 
-        long numberOfBatches = to / liczbaRdzeni;
+        long numberOfBatches = to / coreNumber;
         long incrementBy = to / numberOfBatches;
 
 		long i = 1;
@@ -91,7 +91,7 @@ public class PrimeService {
         while ( hasNextBatchToCalculate ) {
             //1-5, 5-10, 10+15
 			long end = i + incrementBy - 1;
-			Pair pair = getPair(to, hasNextBatchToCalculate, i, end);
+			Pair pair = getPair(to, i, end);
 			result.add(pair);
 
 			i += incrementBy;
@@ -101,8 +101,8 @@ public class PrimeService {
         return result;
     }
 
-	private static Pair getPair(long to, boolean hasNextBatchToCalculate, long i, long end) {
-		if (hasNextBatchToCalculate) {
+	private static Pair getPair(long to, long i, long end) {
+		if (hasNextBatchToCalculate(to, i)) {
 			 return new Pair(i, end);
 		} else {
 			 return new Pair(i, to);

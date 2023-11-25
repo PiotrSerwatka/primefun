@@ -29,7 +29,7 @@ public class FirstProjectOnMacApplicationTests {
 	@CsvSource(value = {"2:1,2", "3:2,3", "5:3,5", "10:4,7", "1299709:100000,1299709"}, delimiter = ':') //, "10000:104729", "100000:1299709", "1000000:15485863"}
 	void prime_numbers_parallel(long primeNumbersToValue, String expectedResult) {
 
-		List<Long> listOfPrimeNumbers = primeService.calculatPrimeInRange(primeNumbersToValue);
+		List<Long> listOfPrimeNumbers = primeService.calculatePrimeInRange(primeNumbersToValue);
 
 		assertThat(format("%s,%s", listOfPrimeNumbers.size(),listOfPrimeNumbers.getLast()))
 				.isEqualTo(expectedResult);
